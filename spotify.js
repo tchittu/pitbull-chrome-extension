@@ -2,7 +2,6 @@
 //future ref: https://github.com/spotify/web-api-auth-examples/blob/master/client_credentials/app.js
 
 var request = require('request'); // "Request" library
-var id = 'Surabhi.keesara'
 
 const client_id = '2f91c477788b42189cd1c01f7c342569';
 const client_secret = '9bb53fc55602446e96bc712827a5f24e';
@@ -72,11 +71,14 @@ function playTrackByID(id) {
 
 function main() {
   getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
+  console.log("Got song");
 }
 
 if (require.main === module) {
   main();
 }
+
+document.getElementById("play").addEventListener("click", main);
 
 //POST
   //method: 'POST'
