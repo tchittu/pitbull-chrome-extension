@@ -68,6 +68,8 @@ function playTrackByID() {
 
 
 function main() {
+  //getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
+  getPlaybackState();
   console.log("Got song");
 }
 
