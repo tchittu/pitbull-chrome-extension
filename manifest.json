@@ -1,0 +1,11 @@
+{
+  "name": "Pitbull Vibes",
+  "version": "1.0.0",
+  "description": "gets the perfect song based on the website you are on",
+  "manifest_version": 3,
+  "author": "spacedOut",
+  "action":{
+    "default_popup": "index.html",
+    "default_title": "Pitbull ~Vibes~"
+  }
+}
