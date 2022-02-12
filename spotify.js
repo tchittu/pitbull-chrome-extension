@@ -67,10 +67,35 @@ function playTrackByID(id) {
   });
 }
 
+function getPlaybackState() {
+  request.post(authOptions, function(error, response, body) {
+    //if able to retrieve access token
+    if (!error && response.statusCode === 200) {
+
+      // use the access token to access the specified song by id
+      var token = body.access_token;
+      var options = {
+        url: `https://api.spotify.com/v1/me/player`,
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        json: true
+      };
+      request.get(options, function(error, response, body) {
+        console.log(body);
+      });
+    } else {
+      console.log(`Unable to play, 
+        code:${response.statusCode}, message:${response.error}`);
+    }
+  });
+}
+
 
 
 function main() {
-  getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
+  //getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
+  getPlaybackState();
   console.log("Got song");
 }
 
