@@ -4,8 +4,8 @@
 var request = require('request'); // "Request" library
 var id = 'Surabhi.keesara'
 
-const client_id = '8c64709671674aa69fb214ba68ac00c5';
-const client_secret = '9167f85c2f6b43099cb2b5e80b4ec3fa';
+const client_id = '2f91c477788b42189cd1c01f7c342569';
+const client_secret = '9bb53fc55602446e96bc712827a5f24e';
 
 //GET ACCESS TOKEN
 var authOptions = {
