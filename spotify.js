@@ -43,11 +43,10 @@ function getTrackByID(id) {
   });
 }
 
-function playTrackByID(id) {
-  request.post(authOptions, function(error, response, body) {
+function playTrackByID() {
+  request.put(authOptions, function(error, response, body) {
     //if able to retrieve access token
     if (!error && response.statusCode === 200) {
-
       // use the access token to access the specified song by id
       var token = body.access_token;
       var options = {
@@ -58,11 +57,10 @@ function playTrackByID(id) {
         json: true
       };
       request.get(options, function(error, response, body) {
-        console.log(body);
+        console.log("MESSAGE: " + response.error.message);
       });
     } else {
-      console.log(`Unable to access track, 
-        code:${response.statusCode}, message:${response.error}`);
+      console.log("MESSAGE: " + response.error.message);
     }
   });
 }
@@ -70,7 +68,8 @@ function playTrackByID(id) {
 
 
 function main() {
-  getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
+  playTrackByID();
+  //getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
   console.log("Got song");
 }
 
