@@ -4,8 +4,13 @@
   "description": "gets the perfect song based on the website you are on",
   "manifest_version": 3,
   "author": "spacedOut",
-  "action":{
+  "action": {
     "default_popup": "index.html",
     "default_title": "Pitbull ~Vibes~"
+  },
+  "icons": {
+    "16": "pitbull16.png",
+    "48": "pitbull48.png",
+    "128": "pitbull128.png"
   }
 }
