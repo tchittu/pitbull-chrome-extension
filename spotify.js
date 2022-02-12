@@ -3,8 +3,8 @@
 
 var request = require('request'); // "Request" library
 
-const client_id = '2f91c477788b42189cd1c01f7c342569';
-const client_secret = '9bb53fc55602446e96bc712827a5f24e';
+const client_id = 'cf3c25f3965f4b348176345e66199ae1';
+const client_secret = '9b0b18ce50244878bfe2dcace308df4c';
 
 //GET ACCESS TOKEN
 var authOptions = {
