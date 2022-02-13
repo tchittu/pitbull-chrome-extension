@@ -3,8 +3,11 @@
 
 var request = require('request'); // "Request" library
 
-const client_id = 'cf3c25f3965f4b348176345e66199ae1';
-const client_secret = '9b0b18ce50244878bfe2dcace308df4c';
+const client_id = '2f91c477788b42189cd1c01f7c342569';
+const client_secret = '9bb53fc55602446e96bc712827a5f24e';
+
+document.getElementById("play").addEventListener("click", playTrack);
+document.getElementById("pause").addEventListener("click", pauseTrack);
 
 //GET ACCESS TOKEN
 var authOptions = {
@@ -43,29 +46,7 @@ function getTrackByID(id) {
   });
 }
 
-function playTrackByID() {
-  request.put(authOptions, function(error, response, body) {
-    //if able to retrieve access token
-    if (!error && response.statusCode === 200) {
-      // use the access token to access the specified song by id
-      var token = body.access_token;
-      var options = {
-        url: 'https://api.spotify.com/v1/me/player/play',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-        json: true
-      };
-      request.get(options, function(error, response, body) {
-        console.log("MESSAGE: " + response.error.message);
-      });
-    } else {
-      console.log("MESSAGE: " + response.error.message);
-    }
-  });
-}
-
-function getPlaybackState() {
+function playTrack() {
   request.post(authOptions, function(error, response, body) {
     //if able to retrieve access token
     if (!error && response.statusCode === 200) {
@@ -73,43 +54,52 @@ function getPlaybackState() {
       // use the access token to access the specified song by id
       var token = body.access_token;
       var options = {
-        url: `https://api.spotify.com/v1/me/player`,
+        url: 'https://api.spotify.com/v1/me/player/play',
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer BQCKUOyiFa2hGDEh_S_DLfB0Qhw4v6Vd-UjYoP3BO3bwJEyq7tpxJQW4902_t1MUszbCK84sI7ny_f0Fz5LQWMtQso1JvuOepA7fSlAMmQ0z6j_Li8ADNRbh4BxcfhZVhZroZf8YM7KfxOXEz7d5aR6t_toI9gMGhszLap207G9M1Ny_pIo'
         },
         json: true
       };
-      request.get(options, function(error, response, body) {
+      request.put(options, function(error, response, body) {
         console.log(body);
       });
     } else {
-      console.log(`Unable to play, 
+      console.log(`Unable to access track, 
         code:${response.statusCode}, message:${response.error}`);
     }
   });
 }
 
+function pauseTrack() {
+  request.post(authOptions, function(error, response, body) {
+    //if able to retrieve access token
+    if (!error && response.statusCode === 200) {
 
+      // use the access token to access the specified song by id
+      var token = body.access_token;
+      var options = {
+        url: 'https://developer.spotify.com/console/put-pause/',
+        headers: {
+          'Authorization': 'Bearer BQCKUOyiFa2hGDEh_S_DLfB0Qhw4v6Vd-UjYoP3BO3bwJEyq7tpxJQW4902_t1MUszbCK84sI7ny_f0Fz5LQWMtQso1JvuOepA7fSlAMmQ0z6j_Li8ADNRbh4BxcfhZVhZroZf8YM7KfxOXEz7d5aR6t_toI9gMGhszLap207G9M1Ny_pIo'
+        },
+        json: true
+      };
+      request.put(options, function(error, response, body) {
+        console.log(body);
+      });
+    } else {
+      console.log(`Unable to access track, 
+        code:${response.statusCode}, message:${response.error}`);
+    }
+  });
+}
 
 function main() {
+  pauseTrack();
   //getTrackByID('3cHyrEgdyYRjgJKSOiOtcS');
-  getPlaybackState();
   console.log("Got song");
 }
 
 if (require.main === module) {
   main();
 }
-
-document.getElementById("play").addEventListener("click", main);
-
-//POST
-  //method: 'POST'
-  //headers
-    //Content type: what does this even mean
-    //Authorization:
-
-  //body
-
-
-//GET
