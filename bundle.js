@@ -88480,97 +88480,182 @@ exports.inflateUndermine = inflateUndermine;
 //future ref: https://github.com/spotify/web-api-auth-examples/blob/master/client_credentials/app.js
 
       var request = require('request'); // "Request" library
+      var global_access = 'BQCDqisRE8cWBlTFtTlFxNYzoyY4YCdZM6mZ8sYVqAZobRhZzdSXduSUS90QNcfVo5mMC4LZqWkALlcQijdVr24Nr_tt4QKoczG4HEvuz0a0hRooMrTPw2A5gAHtvEe6Aan02omzhwQ8uvIBZ6cpPg';
 
-      const client_id = '2f91c477788b42189cd1c01f7c342569';
-      const client_secret = '9bb53fc55602446e96bc712827a5f24e';
+      const client_id = 'cf3c25f3965f4b348176345e66199ae1';
+      const client_secret = '9b0b18ce50244878bfe2dcace308df4c';
 
       document.getElementById("play").addEventListener("click", playTrack);
-      document.getElementById("pause").addEventListener("click", pauseTrack);
+      document.getElementById("dance").addEventListener("click", analyzeDancibility);
+      document.getElementById("test").addEventListener("click", getTracksDanceability);
+      //document.getElementById("currentlyPlaying").
+     // currentlyPlaying
+      //document.getElementById("pause").addEventListener("click", pauseTrack);
 
 //GET ACCESS TOKEN
-      var authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        headers: {
-          //Basic authoriation: id:secret
-          'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-        },
-        form: {
-          grant_type: 'client_credentials'
-        },
-        json: true
-      };
-
-      function getTrackByID(id) {
-        request.post(authOptions, function(error, response, body) {
-          //if able to retrieve access token
-          if (!error && response.statusCode === 200) {
-
-            // use the access token to access the specified song by id
-            var token = body.access_token;
-            var options = {
-              url: `https://api.spotify.com/v1/tracks/${id}`,
-              headers: {
-                'Authorization': 'Bearer ' + token
-              },
-              json: true
-            };
-            request.get(options, function(error, response, body) {
-              console.log(body);
-            });
-          } else {
-            console.log(`Unable to access track, 
-        code:${response.statusCode}, message:${response.error}`);
-          }
-        });
+      async function getCredentials(){
+        return fetch('https://accounts.spotify.com/api/token', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+          },
+          form: {
+            grant_type: 'client_credentials'
+          },
+        }).then(response => response.json());
+        console.log(response.json());
       }
 
-      function playTrack() {
-        request.post(authOptions, function(error, response, body) {
-          //if able to retrieve access token
-          if (!error && response.statusCode === 200) {
-
-            // use the access token to access the specified song by id
-            var token = body.access_token;
-            var options = {
-              url: 'https://api.spotify.com/v1/me/player/play',
-              headers: {
-                'Authorization': 'Bearer BQCKUOyiFa2hGDEh_S_DLfB0Qhw4v6Vd-UjYoP3BO3bwJEyq7tpxJQW4902_t1MUszbCK84sI7ny_f0Fz5LQWMtQso1JvuOepA7fSlAMmQ0z6j_Li8ADNRbh4BxcfhZVhZroZf8YM7KfxOXEz7d5aR6t_toI9gMGhszLap207G9M1Ny_pIo'
-              },
-              json: true
-            };
-            request.put(options, function(error, response, body) {
-              console.log(body);
-            });
-          } else {
-            console.log(`Unable to access track, 
-        code:${response.statusCode}, message:${response.error}`);
+      //get current playing track
+      async function getCurrentTrack(){
+        //var cred = await getCredentials();
+        return fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + global_access,
           }
-        });
+        }).then(response => response.json());
       }
 
-      function pauseTrack() {
-        request.post(authOptions, function(error, response, body) {
-          //if able to retrieve access token
-          if (!error && response.statusCode === 200) {
-
-            // use the access token to access the specified song by id
-            var token = body.access_token;
-            var options = {
-              url: 'https://developer.spotify.com/console/put-pause/',
-              headers: {
-                'Authorization': 'Bearer BQCKUOyiFa2hGDEh_S_DLfB0Qhw4v6Vd-UjYoP3BO3bwJEyq7tpxJQW4902_t1MUszbCK84sI7ny_f0Fz5LQWMtQso1JvuOepA7fSlAMmQ0z6j_Li8ADNRbh4BxcfhZVhZroZf8YM7KfxOXEz7d5aR6t_toI9gMGhszLap207G9M1Ny_pIo'
-              },
-              json: true
-            };
-            request.put(options, function(error, response, body) {
-              console.log(body);
-            });
-          } else {
-            console.log(`Unable to access track, 
-        code:${response.statusCode}, message:${response.error}`);
+      //get current playing track
+      async function analyzeSong(id){
+        //var log_id = await getCurrentTrack();
+        //var id = await log_id.item.id;
+        return fetch(`https://api.spotify.com/v1/audio-features/${id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + global_access,
           }
-        });
+        }).then(response => response.json());
       }
+
+      //get current playing track
+      async function analyzeDancibility(id){
+        var analysis = await analyzeSong(id);
+        return analysis.danceability;
+      }
+
+      //get current playing track
+      async function playTrack(){
+        return fetch('https://api.spotify.com/v1/me/player/play', {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + global_access,
+          }
+        }).then(response => response.json());
+      }
+
+      //get Pitbull top tracks
+      async function getPitbull() {
+        id = '0TnOYISbd1XYRBk9myaseg';
+        return fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=ES`, {
+          method: 'GET',
+          headers: {
+            //'Market' : 'ES',
+            'Authorization': 'Bearer ' + global_access,
+          }
+        }).then(response => response.json());
+      }
+
+      //given a json object of tracks, generate a list of track IDs
+      async function getTrackIDs(tracklist) {
+        var tracks = [];
+        var trackList = await getPitbull();
+        var count = await Object.keys(trackList.tracks).length;
+        for (let t = 0; t < count; t++) {
+          var idToAdd = (Object.values(trackList.tracks)[t].id);
+          tracks.push(idToAdd);
+        }
+        console.log(tracks);
+        return tracks;
+      }
+
+      //given a list of track ids, calculate the average danceability
+      async function getTracksDanceability() {
+        var tracks = await getTrackIDs();
+        var count = await tracks.length;
+        var danceability = 0;
+        if (count == 0) {
+          console.log('No tracks entered!');
+          return 0;
+        }
+        for (let t = 0; t < count; t++) {
+          var newDance = await analyzeDancibility(tracks[t]);
+          //console.log('Track' + t + ': ' + newDance);
+          var avgToAdd = await newDance/count;
+          danceability += avgToAdd;
+        }
+        console.log('AVG PITBULL: ' + danceability);
+      }
+
+
+
+
+
+      // var authOptions = {
+      //   url: 'https://accounts.spotify.com/api/token',
+      //   headers: {
+      //     //Basic authoriation: id:secret
+      //     'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+      //   },
+      //   form: {
+      //     grant_type: 'client_credentials'
+      //   },
+      //   json: true
+      // };
+
+      // function getTrackByID(id) {
+      //   request.post(authOptions, function(error, response, body) {
+      //     //if able to retrieve access token
+      //     if (!error && response.statusCode === 200) {
+      //
+      //       // use the access token to access the specified song by id
+      //       var token = body.access_token;
+      //       var options = {
+      //         url: `https://api.spotify.com/v1/tracks/${id}`,
+      //         headers: {
+      //           'Authorization': 'Bearer ' + global_access
+      //         },
+      //         json: true
+      //       };
+      //       request.get(options, function(error, response, body) {
+      //         console.log(body);
+      //       });
+      //     } else {
+      //       console.log(`Unable to access track,
+      //   code:${response.statusCode}, message:${response.error}`);
+      //     }
+      //   });
+      // }
+      //
+      // function pauseTrack() {
+      //   request.post(authOptions, function(error, response, body) {
+      //     //if able to retrieve access token
+      //     if (!error && response.statusCode === 200) {
+      //
+      //       // use the access token to access the specified song by id
+      //       var token = body.access_token;
+      //       var options = {
+      //         url: 'https://developer.spotify.com/console/put-pause/',
+      //         headers: {
+      //           'Authorization': 'Bearer BQD-lj5S3dHjyQSME4t2aBPz5ll8IMc5fjRllApTMWs9Fc4WKeZd5Siubx5_DXV7-VMxHe0txsapJasdMer7wgOsnIGQEB5be6raBc-gdbByzKUJin3YytH7VI4d1RL2TmFWJmSKExJ-Wst5HNQ',
+      //           //'Access-Control-Allow-Origin': '*',
+      //           'Access-Control-Allow-Methods': 'put post'
+      //           //'Access-Control-Allow-Methods': '*',
+      //           //'Access-Control-Allow-Credentials': 'true',
+      //           //'Access-Control-Expose-Headers': '*'
+      //         },
+      //         json: true
+      //       };
+      //       request.put(options, function(error, response, body) {
+      //         console.log(body);
+      //       });
+      //     } else {
+      //       console.log(`Unable to access track,
+      //   code:${response.statusCode}, message:${response.error}`);
+      //     }
+      //   });
+      // }
 
       function main() {
         pauseTrack();
